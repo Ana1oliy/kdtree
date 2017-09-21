@@ -1,5 +1,6 @@
 package ru.ana1oliy.kdtree.range;
 
+import ru.ana1oliy.kdtree.KDTreeUtils;
 import ru.ana1oliy.kdtree.points.KDPoint;
 
 public class RangeKD<T extends Number & Comparable<T>> implements KDRange<T> {
@@ -37,8 +38,18 @@ public class RangeKD<T extends Number & Comparable<T>> implements KDRange<T> {
 
 	@Override
 	public boolean contains(KDPoint<T> point) {
-		// TODO Auto-generated method stub
-		return false;
+		if (point == null)
+			throw new IllegalArgumentException("Point can not be null.");
+		
+		if (point.size() != size())
+			throw new IllegalArgumentException("Range and point dimensions must be equal.");
+		
+		for (char dimension = 0; dimension < size(); dimension++) {
+			if (!KDTreeUtils.isBeetween(point.get(dimension), from.get(dimension), to.get(dimension)))
+				return false;
+		}
+		
+		return true;
 	}
 
 	@Override
