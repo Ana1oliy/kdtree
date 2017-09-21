@@ -1,0 +1,16 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+jar {
+	baseName = 'kd-tree'
+	version = '0.1.0'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.13'
+}

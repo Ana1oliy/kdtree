@@ -12,9 +12,9 @@ import org.junit.runners.Parameterized;
 import ru.ana1oliy.kdtree.points.PointKD;
 
 @RunWith(Parameterized.class)
-public class PointKDDistanceTest {
+public class PointKDDistanceToTest {
 
-	public PointKDDistanceTest(int x1, int y1, int z1, int x2, int y2, int z2, double squared, double distance) {
+	public PointKDDistanceToTest(int x1, int y1, int z1, int x2, int y2, int z2, double squared, double distance) {
 		this.squared = squared;
 		this.distance = distance;
 		
