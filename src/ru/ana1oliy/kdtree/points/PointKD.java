@@ -12,7 +12,7 @@ public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
 		coordinates = (T[]) new Number[dimensions];
 	}
 	
-	public PointKD(T[] coordinates) {
+	public PointKD(@SuppressWarnings("unchecked") final T... coordinates) {
 		if (coordinates == null)
 			throw new IllegalArgumentException("Parameter can not be null.");
 		
@@ -24,7 +24,6 @@ public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
 	
 		this.coordinates = Arrays.copyOf(coordinates, coordinates.length);
 	}
-	
 	
 	private T[] coordinates;
 	
@@ -77,5 +76,30 @@ public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
     	}
     	
     	return sum;
+    }
+    
+    @Override
+    public boolean equals(Object object) {
+    	if (object == null)
+    		return false;
+    	
+    	if (object == this)
+    		return true;
+    	
+    	if (!getClass().isAssignableFrom(object.getClass()))
+    		return false;
+    	
+    	@SuppressWarnings("unchecked")
+		PointKD<T> other = (PointKD<T>) object;
+    	
+    	if (size() != other.size())
+    		return false;
+    	
+    	for (char i = 0; i < size(); i++) {
+    		if (!get(i).equals(other.get(i)))
+    			return false;
+    	}
+    		
+    	return true;
     }
 }

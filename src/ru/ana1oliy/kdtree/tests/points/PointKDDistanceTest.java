@@ -18,11 +18,8 @@ public class PointKDDistanceTest {
 		this.squared = squared;
 		this.distance = distance;
 		
-		Integer[] pointData1 = {new Integer(x1), new Integer(y1), new Integer(z1)};
-		point1 = new PointKD<>(pointData1);
-		
-		Integer[] pointData2 = {new Integer(x2), new Integer(y2), new Integer(z2)};
-		point2 = new PointKD<>(pointData2);
+		point1 = new PointKD<>(x1, y1, z1);
+		point2 = new PointKD<>(x2, y2, z2);
 	}
 	
 	private PointKD<Integer> point1;
