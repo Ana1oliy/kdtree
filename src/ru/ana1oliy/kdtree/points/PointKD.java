@@ -4,14 +4,6 @@ import java.util.Arrays;
 
 public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
 	
-	@SuppressWarnings("unchecked")
-	public PointKD(char dimensions) {
-		if (dimensions < 1)
-			throw new IllegalArgumentException("Count of dimensions must be greater than 0.");
-	
-		coordinates = (T[]) new Number[dimensions];
-	}
-	
 	public PointKD(@SuppressWarnings("unchecked") final T... coordinates) {
 		if (coordinates == null)
 			throw new IllegalArgumentException("Parameter can not be null.");
@@ -33,21 +25,6 @@ public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
 		
 		return coordinates[dimension];
 	}
-
-    /**
-     * Sets the coordinate value for dimension.
-     * @param dimension must be greater than or equal to 0 and less than size.
-     * @param coordinate coordinate for passed dimension.
-     */
-    public void set(char dimension, T coordinate) {
-    	if (dimension >= size())
-			throw new IllegalArgumentException("Dimension does not exist.");
-    	
-    	if (coordinate == null)
-    		throw new IllegalArgumentException("Coordinate can not be null.");
-    	
-    	coordinates[dimension] = coordinate;
-    }
 
     /**
      * Point dimensions count. Assumes that greater than 0.
