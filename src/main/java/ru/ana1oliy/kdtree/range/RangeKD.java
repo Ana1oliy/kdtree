@@ -1,8 +1,21 @@
 package ru.ana1oliy.kdtree.range;
 
-import ru.ana1oliy.kdtree.KDTreeUtils;
 import ru.ana1oliy.kdtree.points.KDPoint;
+import ru.ana1oliy.utils.ComparableUtils;
 
+/**
+ * Implements <code>KDRange</code> interface. 
+ * <b>NOTE</b>: One range is equal to other range if the <i>from</i> point 
+ * of the first range is equal to the <i>from</i> point of the second range and
+ * the <i>to</i> point of the first range is equal to the <i>to</i> point of
+ * the second range, or if the <i>from</i> point of the first range is equal
+ * to the <i>to</i> point of the second range and the <i>to</i> point of the
+ * first range is equal to the <i>from</i> point of the second range.
+ * @author Ana1oliy
+ *
+ * @param <T> must extends <code>Number</code> class and implement
+ * <code>Comparable</code> interface.
+ */
 public class RangeKD<T extends Number & Comparable<T>> implements KDRange<T> {
 
 	/**
@@ -45,7 +58,7 @@ public class RangeKD<T extends Number & Comparable<T>> implements KDRange<T> {
 			throw new IllegalArgumentException("Range and point dimensions must be equal.");
 		
 		for (char dimension = 0; dimension < size(); dimension++) {
-			if (!KDTreeUtils.isBeetween(point.get(dimension), from.get(dimension), to.get(dimension)))
+			if (!ComparableUtils.isBeetween(point.get(dimension), from.get(dimension), to.get(dimension)))
 				return false;
 		}
 		
@@ -53,51 +66,87 @@ public class RangeKD<T extends Number & Comparable<T>> implements KDRange<T> {
 	}
 
 	@Override
-	public KDRange<T> union(KDRange<T> range) {
-		// TODO Auto-generated method stub
-		return null;
+	public char size() {
+		return from.size();
 	}
 
 	@Override
-	public KDRange<T> intarsection(KDRange<T> range) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public KDRange<T> subtraction(KDRange<T> range) {
-		// TODO Auto-generated method stub
-		return null;
+	public KDRange<T> lowerHalf(T coordinate, char dimension) {
+		checkDimension(dimension);
+		checkSplitCoordinate(coordinate);
+		
+		KDPoint<T> min;
+		KDPoint<T> max;
+		
+		if (from.get(dimension).compareTo(to.get(dimension)) < 0) {
+			min = from;
+			max = to;
+		} else {
+			min = to;
+			max = from;
+		}
+		
+		KDPoint<T> splitPoint = max.alignedPoint(coordinate, dimension);
+		checkSplitPoint(splitPoint);
+		
+		return new RangeKD<T>(min, splitPoint);
 	}
 	
 	@Override
-	public KDRange<T>[] split(T coordinate, char dimension) {
-		// TODO Auto-generated method stub
-		return null;
+	public KDRange<T> higherHalf(T coordinate, char dimension) {
+		checkDimension(dimension);
+		checkSplitCoordinate(coordinate);
+		
+		KDPoint<T> min;
+		KDPoint<T> max;
+		
+		if (from.get(dimension).compareTo(to.get(dimension)) < 0) {
+			min = from;
+			max = to;
+		} else {
+			min = to;
+			max = from;
+		}
+		
+		KDPoint<T> splitPoint = min.alignedPoint(coordinate, dimension);
+		checkSplitPoint(splitPoint);
+		
+		return new RangeKD<T>(min.alignedPoint(coordinate, dimension), max);
 	}
-
+	
 	@Override
-	public double distanceTo(KDPoint<T> point) {
-		// TODO Auto-generated method stub
-		return 0;
+    public boolean equals(Object object) {
+    	if (object == null)
+    		return false;
+    	
+    	if (object == this)
+    		return true;
+    	
+    	if (!getClass().isAssignableFrom(object.getClass()))
+    		return false;
+    	
+    	@SuppressWarnings("unchecked")
+		KDRange<T> other = (KDRange<T>) object;
+    	
+    	if (size() != other.size())
+    		return false;
+    		
+    	return (from.equals(other.from()) && to.equals(other.to())) ||
+    			(from.equals(other.to()) && to.equals(other.from()));
+    }
+	
+	private void checkDimension(char dimension) {
+		if (dimension >= size())
+			throw new IllegalArgumentException("Dimension does not exist.");
 	}
-
-	@Override
-	public char size() {
-		// TODO Auto-generated method stub
-		return 0;
+	
+	private void checkSplitCoordinate(T coordinate) {
+		if (coordinate == null)
+			throw new IllegalArgumentException("Coordinate can not be null.");
 	}
-
-	@Override
-	public boolean intersect(KDRange<T> range) {
-		// TODO Auto-generated method stub
-		return false;
+	
+	private void checkSplitPoint(KDPoint<T> point) {
+		if (!contains(point))
+			throw new IllegalArgumentException("Split line represented by dimension and coordinate must intersect the range.");
 	}
-
-	@Override
-	public double squaredDistanceTo(KDPoint<T> point) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

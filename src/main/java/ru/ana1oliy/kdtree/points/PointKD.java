@@ -17,12 +17,14 @@ public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
 		this.coordinates = Arrays.copyOf(coordinates, coordinates.length);
 	}
 	
+	private PointKD() {
+		
+	}
+	
 	private T[] coordinates;
 	
 	public T get(char dimension) {
-		if (dimension >= size())
-			throw new IllegalArgumentException("Dimension does not exist.");
-		
+		checkDimension(dimension);
 		return coordinates[dimension];
 	}
 
@@ -55,6 +57,24 @@ public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
     	return sum;
     }
     
+    public T[] asArray() {
+    	return Arrays.copyOf(coordinates, coordinates.length);
+    }
+    
+    public KDPoint<T> alignedPoint(T coordinate, char dimension) {
+    	checkDimension(dimension);
+    	
+    	if (coordinate == null)
+    		throw new IllegalArgumentException("Coordinate can not be null.");
+    	
+    	T[] coordinates = asArray();
+    	coordinates[dimension] = coordinate;
+    	PointKD<T> alignedPoint = new PointKD<>();
+    	alignedPoint.coordinates = coordinates;
+    	
+    	return alignedPoint;
+    }
+    
     @Override
     public boolean equals(Object object) {
     	if (object == null)
@@ -78,5 +98,10 @@ public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
     	}
     		
     	return true;
+    }
+    
+    private void checkDimension(char dimension) {
+    	if (dimension >= size())
+			throw new IllegalArgumentException("Dimension does not exist.");
     }
 }

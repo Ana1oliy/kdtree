@@ -19,7 +19,7 @@ public class PointKDTest {
 	@Test
 	public void testCreateByEmptyArrayException() {
 		thrown.expect(IllegalArgumentException.class);
-		new PointKD<>();
+		new PointKD<Integer>();
 	}
 
 	@Test
@@ -31,7 +31,7 @@ public class PointKDTest {
 	@Test
 	public void testCreateByNullArrayException() {
 		thrown.expect(IllegalArgumentException.class);
-		new PointKD<>(null);
+		new PointKD<Integer>(null);
 	}
 	
 	@Test

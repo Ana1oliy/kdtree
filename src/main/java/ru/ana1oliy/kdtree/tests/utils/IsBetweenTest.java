@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import ru.ana1oliy.kdtree.KDTreeUtils;
+import ru.ana1oliy.utils.ComparableUtils;
 
 @RunWith(Parameterized.class)
 public class IsBetweenTest {
@@ -34,7 +34,8 @@ public class IsBetweenTest {
 	    return Arrays.asList(new Object[][] {
 		    {0,		-10,	10,		true},
 		    {1,		1,		1,		true},
-		    {5,		15,		2,		true},
+		    {5,		5,		2,		true},
+		    {10,	10,		-2,		true},
 		    {-10,	4,		18,		false},
 		    {4,		23,		11,		false},
 		    {40,	3,		20,		false},
@@ -44,7 +45,7 @@ public class IsBetweenTest {
 	
 	@Test
 	public void testIsBeetween() {
-		assertEquals(KDTreeUtils.isBeetween(value, boundA, boundB), isBetween);
+		assertEquals(ComparableUtils.isBeetween(value, boundA, boundB), isBetween);
 	}
 
 }

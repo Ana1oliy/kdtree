@@ -25,6 +25,7 @@ public class RangeKDTest {
 		KDRange<Integer> range = new RangeKD<>(from, to);
 		assertTrue(from.equals(range.from()));
 		assertTrue(to.equals(range.to()));
+		assertEquals(from.size(), range.size());
 	}
 	
 	@Rule
