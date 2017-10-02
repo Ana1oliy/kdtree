@@ -10,22 +10,24 @@ import org.junit.experimental.theories.Theory;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
+import ru.ana1oliy.kdtree.points.IntKDPoint;
 import ru.ana1oliy.kdtree.points.KDPoint;
-import ru.ana1oliy.kdtree.points.PointKD;
+import ru.ana1oliy.kdtree.points.NumberKDPoint;
 import ru.ana1oliy.kdtree.range.KDRange;
-import ru.ana1oliy.kdtree.range.RangeKD;
+import ru.ana1oliy.kdtree.range.AbstractKDRange;
+import ru.ana1oliy.kdtree.range.IntKDRange;
 
 @RunWith(Theories.class)
 public class RangeKDTest {
 
 	@Test
 	public void testRangeKD() {
-		KDPoint<Integer> from = new PointKD<>(1, 3);
-		KDPoint<Integer> to = new PointKD<>(10, 12);
-		KDRange<Integer> range = new RangeKD<>(from, to);
+		KDPoint<Integer> from = new IntKDPoint(1, 3);
+		KDPoint<Integer> to = new IntKDPoint(10, 12);
+		KDRange<Integer> range = new IntKDRange(from, to);
 		assertTrue(from.equals(range.from()));
 		assertTrue(to.equals(range.to()));
-		assertEquals(from.size(), range.size());
+		assertEquals(from.dimensions(), range.dimensions());
 	}
 	
 	@Rule
@@ -33,17 +35,17 @@ public class RangeKDTest {
 	
 	@DataPoints
 	public static Object[][] wrongArguments = new Object[][] {
-			{null,						new PointKD<Integer>(1)},
-			{new PointKD<Integer>(3),	null},
+			{null,						new NumberKDPoint<Integer>(1)},
+			{new NumberKDPoint<Integer>(3),	null},
 			{null,						null},
-			{new PointKD<Integer>(5), 	new PointKD<Integer>(10, -7)}
+			{new NumberKDPoint<Integer>(5), 	new NumberKDPoint<Integer>(10, -7)}
 	};
 	
 	@SuppressWarnings("unchecked")
 	@Theory
 	public void testCreateRangeKDWithIncorrectArguments(final Object... points) {
 		thrown.expect(IllegalArgumentException.class);
-		new RangeKD<>((KDPoint<Integer>) points[0], (KDPoint<Integer>) points[1]);
+		new IntKDRange((KDPoint<Integer>) points[0], (KDPoint<Integer>) points[1]);
 	}
 
 }

@@ -56,7 +56,11 @@ public interface KDRange<T extends Number & Comparable<T>> {
 	KDRange<T> higherHalf(T coordinate, char dimension);
 	
 	/**
-	 * @return Dimensions of the range.
+	 * @return Dimensions count of the range.
 	 */
-	char size();
+	char dimensions();
+	
+	KDPoint<T> center();
+	
+	T size(char dimension);
 }

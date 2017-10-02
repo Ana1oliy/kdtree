@@ -10,9 +10,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import ru.ana1oliy.kdtree.points.KDPoint;
-import ru.ana1oliy.kdtree.points.PointKD;
+import ru.ana1oliy.kdtree.points.NumberKDPoint;
 import ru.ana1oliy.kdtree.range.KDRange;
-import ru.ana1oliy.kdtree.range.RangeKD;
+import ru.ana1oliy.kdtree.range.AbstractKDRange;
+import ru.ana1oliy.kdtree.range.IntKDRange;
 
 @RunWith(Parameterized.class)
 public class RangeKDContainsTest {
@@ -20,7 +21,7 @@ public class RangeKDContainsTest {
 	public RangeKDContainsTest(KDPoint<Integer> point, boolean inRange) {
 		this.point = point;
 		this.inRange = inRange;
-		range = new RangeKD<>(new PointKD<>(-5, 3), new PointKD<>(10, -4));
+		range = new IntKDRange(new NumberKDPoint<>(-5, 3), new NumberKDPoint<>(10, -4));
 	}
 	
 	private KDPoint<Integer> point;
@@ -35,27 +36,27 @@ public class RangeKDContainsTest {
 	@Parameterized.Parameters
 	public static List<Object[]> pointsSet() {
 	    return Arrays.asList(new Object[][] {
-		    {new PointKD<Integer>(-5, 3),	true},
-		    {new PointKD<Integer>(10, 3),	true},
-		    {new PointKD<Integer>(-5, -4),	true},
-		    {new PointKD<Integer>(10, -4),	true},
+		    {new NumberKDPoint<Integer>(-5, 3),		true},
+		    {new NumberKDPoint<Integer>(10, 3),		true},
+		    {new NumberKDPoint<Integer>(-5, -4),	true},
+		    {new NumberKDPoint<Integer>(10, -4),	true},
 		    
-		    {new PointKD<Integer>(-5, -1),	true},
-		    {new PointKD<Integer>(2, 3),	true},
-		    {new PointKD<Integer>(10, 0),	true},
-		    {new PointKD<Integer>(5, -4),	true},
+		    {new NumberKDPoint<Integer>(-5, -1),	true},
+		    {new NumberKDPoint<Integer>(2, 3),		true},
+		    {new NumberKDPoint<Integer>(10, 0),		true},
+		    {new NumberKDPoint<Integer>(5, -4),		true},
 		    
-		    {new PointKD<Integer>(7, 1),	true},
-		    {new PointKD<Integer>(-1, -2),	true},
+		    {new NumberKDPoint<Integer>(7, 1),		true},
+		    {new NumberKDPoint<Integer>(-1, -2),	true},
 		    
-		    {new PointKD<Integer>(-7, 6),	false},
-		    {new PointKD<Integer>(2, 7),	false},
-		    {new PointKD<Integer>(15, 6),	false},
-		    {new PointKD<Integer>(15, -1),	false},
-		    {new PointKD<Integer>(16, -8),	false},
-		    {new PointKD<Integer>(3, -5),	false},
-		    {new PointKD<Integer>(-6, -9),	false},
-		    {new PointKD<Integer>(-10, 0),	false}
+		    {new NumberKDPoint<Integer>(-7, 6),		false},
+		    {new NumberKDPoint<Integer>(2, 7),		false},
+		    {new NumberKDPoint<Integer>(15, 6),		false},
+		    {new NumberKDPoint<Integer>(15, -1),	false},
+		    {new NumberKDPoint<Integer>(16, -8),	false},
+		    {new NumberKDPoint<Integer>(3, -5),		false},
+		    {new NumberKDPoint<Integer>(-6, -9),	false},
+		    {new NumberKDPoint<Integer>(-10, 0),	false}
 	    });
 	}
 	

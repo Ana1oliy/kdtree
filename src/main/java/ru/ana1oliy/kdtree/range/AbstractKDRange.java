@@ -1,6 +1,7 @@
 package ru.ana1oliy.kdtree.range;
 
 import ru.ana1oliy.kdtree.points.KDPoint;
+import ru.ana1oliy.kdtree.points.NumberKDPoint;
 import ru.ana1oliy.utils.ComparableUtils;
 
 /**
@@ -16,7 +17,7 @@ import ru.ana1oliy.utils.ComparableUtils;
  * @param <T> must extends <code>Number</code> class and implement
  * <code>Comparable</code> interface.
  */
-public class RangeKD<T extends Number & Comparable<T>> implements KDRange<T> {
+public abstract class AbstractKDRange<T extends Number & Comparable<T>> implements KDRange<T> {
 
 	/**
 	 * Creates range by two points. Dimensions of this points must be equals. 
@@ -24,20 +25,23 @@ public class RangeKD<T extends Number & Comparable<T>> implements KDRange<T> {
 	 * @param from first point.
 	 * @param to second point.
 	 */
-	public RangeKD(KDPoint<T> from, KDPoint<T> to) {
+	public AbstractKDRange(KDPoint<T> from, KDPoint<T> to) {
 		if (from == null || to == null)
 			throw new IllegalArgumentException("Initial points can not be null.");
 		
-		if (from.size() != to.size())
+		if (from.dimensions() != to.dimensions())
 			throw new IllegalArgumentException("Dimensions of points must be equals.");
 		
 		this.from = from;
 		this.to = to;
+		center = calculateCenter();
 	}
 	
 	private KDPoint<T> from;
 	
 	private KDPoint<T> to;
+	
+	private KDPoint<T> center;
 	
 	@Override
 	public KDPoint<T> from() {
@@ -54,10 +58,10 @@ public class RangeKD<T extends Number & Comparable<T>> implements KDRange<T> {
 		if (point == null)
 			throw new IllegalArgumentException("Point can not be null.");
 		
-		if (point.size() != size())
+		if (point.dimensions() != dimensions())
 			throw new IllegalArgumentException("Range and point dimensions must be equal.");
 		
-		for (char dimension = 0; dimension < size(); dimension++) {
+		for (char dimension = 0; dimension < dimensions(); dimension++) {
 			if (!ComparableUtils.isBeetween(point.get(dimension), from.get(dimension), to.get(dimension)))
 				return false;
 		}
@@ -66,8 +70,8 @@ public class RangeKD<T extends Number & Comparable<T>> implements KDRange<T> {
 	}
 
 	@Override
-	public char size() {
-		return from.size();
+	public char dimensions() {
+		return from.dimensions();
 	}
 
 	@Override
@@ -89,7 +93,7 @@ public class RangeKD<T extends Number & Comparable<T>> implements KDRange<T> {
 		KDPoint<T> splitPoint = max.alignedPoint(coordinate, dimension);
 		checkSplitPoint(splitPoint);
 		
-		return new RangeKD<T>(min, splitPoint);
+		return createRange(min, splitPoint);
 	}
 	
 	@Override
@@ -111,7 +115,17 @@ public class RangeKD<T extends Number & Comparable<T>> implements KDRange<T> {
 		KDPoint<T> splitPoint = min.alignedPoint(coordinate, dimension);
 		checkSplitPoint(splitPoint);
 		
-		return new RangeKD<T>(min.alignedPoint(coordinate, dimension), max);
+		return createRange(splitPoint, max);
+	}
+	
+	@Override
+	public KDPoint<T> center() {
+		return center;
+	}
+	
+	@Override
+	public T size(char dimension) {
+		return distanceByAxis(from.get(dimension), to.get(dimension));
 	}
 	
 	@Override
@@ -128,15 +142,32 @@ public class RangeKD<T extends Number & Comparable<T>> implements KDRange<T> {
     	@SuppressWarnings("unchecked")
 		KDRange<T> other = (KDRange<T>) object;
     	
-    	if (size() != other.size())
+    	if (dimensions() != other.dimensions())
     		return false;
     		
     	return (from.equals(other.from()) && to.equals(other.to())) ||
     			(from.equals(other.to()) && to.equals(other.from()));
     }
 	
+	private KDPoint<T> calculateCenter() {
+		T[] coordinates = createCoordinatesArray();
+		
+		for (char d = 0; d < dimensions(); d++)
+			coordinates[d] = middleOf(from.get(d), to.get(d));
+		
+		return new NumberKDPoint<T>(coordinates);
+	}
+	
+	protected abstract T[] createCoordinatesArray();
+	
+	protected abstract T middleOf(T a, T b);
+	
+	protected abstract KDRange<T> createRange(KDPoint<T> from, KDPoint<T> to);
+	
+	protected abstract T distanceByAxis(T a, T b);
+	
 	private void checkDimension(char dimension) {
-		if (dimension >= size())
+		if (dimension >= dimensions())
 			throw new IllegalArgumentException("Dimension does not exist.");
 	}
 	

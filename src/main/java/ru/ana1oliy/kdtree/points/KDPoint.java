@@ -20,9 +20,9 @@ public interface KDPoint<T extends Number & Comparable<T>> {
 
     /**
      * Point dimensions count. Assumes that greater than 0.
-     * @return dimensions count.
+     * @return Dimensions count.
      */
-    char size();
+    char dimensions();
     
     /**
      * Calculates distance to other point.

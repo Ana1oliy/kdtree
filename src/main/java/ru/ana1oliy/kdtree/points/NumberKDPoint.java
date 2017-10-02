@@ -2,9 +2,9 @@ package ru.ana1oliy.kdtree.points;
 
 import java.util.Arrays;
 
-public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
+public class NumberKDPoint<T extends Number & Comparable<T>> implements KDPoint<T> {
 	
-	public PointKD(@SuppressWarnings("unchecked") final T... coordinates) {
+	public NumberKDPoint(@SuppressWarnings("unchecked") final T... coordinates) {
 		if (coordinates == null)
 			throw new IllegalArgumentException("Parameter can not be null.");
 		
@@ -17,7 +17,7 @@ public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
 		this.coordinates = Arrays.copyOf(coordinates, coordinates.length);
 	}
 	
-	private PointKD() {
+	private NumberKDPoint() {
 		
 	}
 	
@@ -32,7 +32,7 @@ public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
      * Point dimensions count. Assumes that greater than 0.
      * @return dimensions count.
      */
-    public char size() {
+    public char dimensions() {
     	return (char) coordinates.length;
     }
     
@@ -45,12 +45,12 @@ public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
     	if (point == null)
     		throw new IllegalArgumentException("Point can not be null.");
     	
-    	if (size() != point.size())
+    	if (dimensions() != point.dimensions())
     		throw new IllegalArgumentException("Dimensions of the points must be equal.");
     	
     	double sum = 0;
     	
-    	for (char d = 0; d < size(); d++) {
+    	for (char d = 0; d < dimensions(); d++) {
     		sum += Math.pow(get(d).doubleValue() - point.get(d).doubleValue(), 2);
     	}
     	
@@ -69,7 +69,7 @@ public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
     	
     	T[] coordinates = asArray();
     	coordinates[dimension] = coordinate;
-    	PointKD<T> alignedPoint = new PointKD<>();
+    	NumberKDPoint<T> alignedPoint = new NumberKDPoint<>();
     	alignedPoint.coordinates = coordinates;
     	
     	return alignedPoint;
@@ -87,12 +87,12 @@ public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
     		return false;
     	
     	@SuppressWarnings("unchecked")
-		PointKD<T> other = (PointKD<T>) object;
+		NumberKDPoint<T> other = (NumberKDPoint<T>) object;
     	
-    	if (size() != other.size())
+    	if (dimensions() != other.dimensions())
     		return false;
     	
-    	for (char i = 0; i < size(); i++) {
+    	for (char i = 0; i < dimensions(); i++) {
     		if (!get(i).equals(other.get(i)))
     			return false;
     	}
@@ -100,8 +100,25 @@ public class PointKD<T extends Number & Comparable<T>> implements KDPoint<T> {
     	return true;
     }
     
+    @Override
+    public String toString() {
+    	StringBuilder builder = new StringBuilder();
+    	builder.append('(');
+    	
+    	for (char d = 0; d < dimensions(); d++) {
+    		builder.append(coordinates[d]);
+    		
+    		if (d < dimensions() - 1)
+    			builder.append(", ");
+    	}
+    	
+    	builder.append(')');
+    	
+    	return builder.toString();
+    }
+    
     private void checkDimension(char dimension) {
-    	if (dimension >= size())
+    	if (dimension >= dimensions())
 			throw new IllegalArgumentException("Dimension does not exist.");
     }
 }

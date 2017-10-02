@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import ru.ana1oliy.kdtree.points.PointKD;
+import ru.ana1oliy.kdtree.points.NumberKDPoint;
 
 @RunWith(Parameterized.class)
 public class PointKDEqualsTest {
@@ -29,12 +29,12 @@ public class PointKDEqualsTest {
 	@Parameterized.Parameters
 	public static List<Object[]> pointsSet() {
 	    return Arrays.asList(new Object[][] {
-		    {new PointKD<Integer>(1, 2),	new PointKD<Integer>(1, 2),		true},
-		    {new PointKD<Integer>(1, 2),	new PointKD<Double>(1.0, 2.0),	false},
-		    {new PointKD<Integer>(1, 2),	new PointKD<Integer>(2, 1),		false},
-		    {new PointKD<Integer>(1, 2),	null,							false},
-		    {new PointKD<Integer>(1, 2, 3),	new PointKD<Integer>(1, 2),		false},
-		    {new PointKD<Integer>(1),		new Object(),					false}
+		    {new NumberKDPoint<Integer>(1, 2),		new NumberKDPoint<Integer>(1, 2),		true},
+		    {new NumberKDPoint<Integer>(1, 2),		new NumberKDPoint<Double>(1.0, 2.0),	false},
+		    {new NumberKDPoint<Integer>(1, 2),		new NumberKDPoint<Integer>(2, 1),		false},
+		    {new NumberKDPoint<Integer>(1, 2),		null,									false},
+		    {new NumberKDPoint<Integer>(1, 2, 3),	new NumberKDPoint<Integer>(1, 2),		false},
+		    {new NumberKDPoint<Integer>(1),			new Object(),							false}
 	    });
 	}
 	
