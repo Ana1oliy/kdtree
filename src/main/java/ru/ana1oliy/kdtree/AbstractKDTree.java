@@ -1,6 +1,8 @@
 package ru.ana1oliy.kdtree;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import ru.ana1oliy.kdtree.points.KDPoint;
@@ -39,6 +41,9 @@ public abstract class AbstractKDTree<T extends Number & Comparable<T>> implement
     public void add(KDPoint<T> point) {
     	checkPoint(point);
     	
+    	if (!range.contains(point))
+    		throw new IllegalArgumentException("Point out of accessible range.");
+    	
         if (root == null) {
             root = createNode(point, range);
             size++;
@@ -58,7 +63,14 @@ public abstract class AbstractKDTree<T extends Number & Comparable<T>> implement
     
     @Override
     public Iterable <KDPoint<T>> find(KDRange<T> searchRange) {
-    	return null;
+    	checkRange(searchRange);
+    	
+    	if (isEmpty())
+    		throw new NoSuchElementException("Nothing to find.");
+    	
+    	List<KDPoint<T>> result = new ArrayList<>();
+    	root.find(result, searchRange);
+    	return result;
     }
     
     @Override
@@ -82,9 +94,14 @@ public abstract class AbstractKDTree<T extends Number & Comparable<T>> implement
     	
     	if (point.dimensions() != dimensions)
     		throw new IllegalArgumentException("Incorrect point dimension.");
+    }
+    
+    private void checkRange(KDRange<T> range) {
+    	if (range == null)
+    		throw new IllegalArgumentException("Range can not be null.");
     	
-    	if (!range.contains(point))
-    		throw new IllegalArgumentException("Point out of accessible range.");
+    	if (range.dimensions() != dimensions)
+    		throw new IllegalArgumentException("Incorrect range dimension.");
     }
     
     protected abstract AbstractKDTreeNode<T> createNode(KDPoint<T> point, KDRange<T> range);

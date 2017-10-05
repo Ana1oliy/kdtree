@@ -1,5 +1,7 @@
 package ru.ana1oliy.kdtree;
 
+import java.util.Collection;
+
 import ru.ana1oliy.kdtree.points.KDPoint;
 import ru.ana1oliy.kdtree.range.KDRange;
 
@@ -77,7 +79,7 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>> {
     
     
     public KDPoint<T> nearest(double min, KDPoint<T> point) {
-    	System.out.println(key);
+    	//System.out.println(key);
     	
     	KDPoint<T> candidate = null;
     	KDPoint<T> leftCandidate = null;
@@ -90,10 +92,10 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>> {
     		candidate = key;
     	}
     	
-    	if (left != null && mayContainNearest(point, newMin, left.range()))
+    	if (left != null && left.mayContainNearest(point, newMin))
     		leftCandidate = left.nearest(newMin, point);
     	
-    	if (right != null && mayContainNearest(point, newMin, right.range()))
+    	if (right != null && right.mayContainNearest(point, newMin))
     		rightCandidate = right.nearest(newMin, point);
     	
     	if (leftCandidate != null && rightCandidate != null) {
@@ -114,29 +116,24 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>> {
     	return candidate;
     }
     
-    private boolean mayContainNearest(KDPoint<T> point, double radiusSquared, KDRange<T> range) {
+    public void find(Collection<KDPoint<T>> found, KDRange<T> range) {
+    	if (range.contains(key))
+    		found.add(key);
     	
-    	if (range.contains(point))
-    		return true;
+    	if (left != null && left.isSenseToSearch(range))
+    		left.find(found, range);
     	
-    	double radius = Math.sqrt(radiusSquared);
-		T[] circleDistances = createArray(point.dimensions());
-    	double cornerDistanceSquared = 0;
-    	
-    	for (char d = 0; d < point.dimensions(); d++) {
-    		circleDistances[d] = getDistanceByAxis(point.get(d), range.center().get(d));
-    		
-    		double halfSize = range.size(d).doubleValue() / 2;
-    		
-    		if (circleDistances[d].doubleValue() > (halfSize + radius))
-    			return false;
-    		
-    		cornerDistanceSquared += Math.pow(circleDistances[d].doubleValue() - halfSize, 2);
-    	}
-
-        return cornerDistanceSquared <= radiusSquared;
+    	if (right != null && right.isSenseToSearch(range))
+    		right.find(found, range);
     }
     
+    private boolean mayContainNearest(KDPoint<T> point, double radiusSquared) {
+    	return range.squaredDistanceTo(point) <= radiusSquared;
+    }
+    
+    private boolean isSenseToSearch(KDRange<T> range) {
+    	return this.range.intersect(range);
+    }
     protected abstract T getDistanceByAxis(T a, T b);
     
     protected abstract AbstractKDTreeNode<T> createNode(KDPoint<T> key);

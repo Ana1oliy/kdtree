@@ -129,6 +129,47 @@ public abstract class AbstractKDRange<T extends Number & Comparable<T>> implemen
 	}
 	
 	@Override
+	public double squaredDistanceTo(KDPoint<T> point) {
+		checkPoint(point);
+		
+		double squaredDistance = 0;
+		
+		for (char d = 0; d < dimensions(); d++) {
+			double delta = 0;
+			T pointCoordinate = point.get(d);
+			T maxCoordinate = maxCoordinate(this, d);
+			T minCoordinate = minCoordinate(this, d);
+			
+			if (pointCoordinate.compareTo(minCoordinate) < 0)
+				delta = minCoordinate.doubleValue() - pointCoordinate.doubleValue();
+			else if (pointCoordinate.compareTo(maxCoordinate) > 0)
+				delta = pointCoordinate.doubleValue() - maxCoordinate.doubleValue();
+			
+			squaredDistance += delta * delta;
+		}
+		
+		return squaredDistance;
+	}
+	
+	@Override
+	public double distanceTo(KDPoint<T> point) {
+		return Math.sqrt(squaredDistanceTo(point));
+	}
+	
+	@Override
+	public boolean intersect(KDRange<T> range) {
+		checkRange(range);
+		
+		for (char d = 0; d < dimensions(); d++) {
+			if (minCoordinate(this, d).compareTo(maxCoordinate(range, d)) > 0 ||
+					maxCoordinate(this, d).compareTo(minCoordinate(range, d)) < 0)
+				return false;
+		}
+		
+		return true;
+	}
+	
+	@Override
     public boolean equals(Object object) {
     	if (object == null)
     		return false;
@@ -149,6 +190,18 @@ public abstract class AbstractKDRange<T extends Number & Comparable<T>> implemen
     			(from.equals(other.to()) && to.equals(other.from()));
     }
 	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append('[');
+		builder.append(from);
+		builder.append(" - ");
+		builder.append(to);
+		builder.append(']');
+		
+		return builder.toString();
+	}
+	
 	private KDPoint<T> calculateCenter() {
 		T[] coordinates = createCoordinatesArray();
 		
@@ -158,6 +211,21 @@ public abstract class AbstractKDRange<T extends Number & Comparable<T>> implemen
 		return new NumberKDPoint<T>(coordinates);
 	}
 	
+	protected static <T extends Number & Comparable<T>> T minCoordinate(KDRange<T> range, char dimension) {
+		if (range.from().get(dimension).compareTo(range.to().get(dimension)) < 0) {
+			return range.from().get(dimension);
+		} else {
+			return range.to().get(dimension);
+		}
+	}
+	
+	protected static <T extends Number & Comparable<T>> T maxCoordinate(KDRange<T> range, char dimension) {
+		if (range.from().get(dimension).compareTo(range.to().get(dimension)) > 0) {
+			return range.from().get(dimension);
+		} else {
+			return range.to().get(dimension);
+		}
+	}
 	protected abstract T[] createCoordinatesArray();
 	
 	protected abstract T middleOf(T a, T b);
@@ -180,4 +248,21 @@ public abstract class AbstractKDRange<T extends Number & Comparable<T>> implemen
 		if (!contains(point))
 			throw new IllegalArgumentException("Split line represented by dimension and coordinate must intersect the range.");
 	}
+	
+	private void checkPoint(KDPoint<T> point) {
+    	if (point == null)
+    		throw new IllegalArgumentException("Point can not be null.");
+    	
+    	if (point.dimensions() != dimensions())
+    		throw new IllegalArgumentException("Incorrect point dimension.");
+    }
+	
+	
+	private void checkRange(KDRange<T> range) {
+    	if (range == null)
+    		throw new IllegalArgumentException("Range can not be null.");
+    	
+    	if (range.dimensions() != dimensions())
+    		throw new IllegalArgumentException("Incorrect range dimension.");
+    }
 }

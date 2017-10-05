@@ -56,6 +56,20 @@ public interface KDRange<T extends Number & Comparable<T>> {
 	KDRange<T> higherHalf(T coordinate, char dimension);
 	
 	/**
+     * Calculates minimal distance between the specified point and the range border.
+     * @param point must have the same dimension and can not be null.
+     * @return Distance to the range border.
+     */
+    double distanceTo(KDPoint<T> point);
+    
+    /**
+     * Calculates minimal squared distance between the specified point and the range border.
+     * @param point must have the same dimension and can not be null.
+     * @return Distance to the range border.
+     */
+    double squaredDistanceTo(KDPoint<T> point);
+    
+	/**
 	 * @return Dimensions count of the range.
 	 */
 	char dimensions();
@@ -63,4 +77,6 @@ public interface KDRange<T extends Number & Comparable<T>> {
 	KDPoint<T> center();
 	
 	T size(char dimension);
+	
+	boolean intersect(KDRange<T> range);
 }
