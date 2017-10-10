@@ -2,6 +2,8 @@ package ru.ana1oliy.kdtree.tests;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import ru.ana1oliy.kdtree.KDTree;
@@ -78,22 +80,23 @@ public class TreeKDTest {
 	
 	@Test
 	public void testFind() {
-//		KDRange<Integer> range = new IntKDRange(new NumberKDPoint<>(-10, -10), new NumberKDPoint<>(10, 10));
-//		KDTree<Integer> tree = new IntKDTree(range);
-//		
-//		tree.add(new NumberKDPoint<>(1, 5));
-//		tree.add(new NumberKDPoint<>(5, 5));
-//		tree.add(new NumberKDPoint<>(-2, -2));
-//		tree.add(new NumberKDPoint<>(4, 8));
-//		tree.add(new NumberKDPoint<>(-2, 4));
-//		tree.add(new NumberKDPoint<>(2, -8));
-//		tree.add(new NumberKDPoint<>(7, 1));
-//		tree.add(new NumberKDPoint<>(-2, -6));
-//		tree.add(new NumberKDPoint<>(-6, -4));
-//		tree.add(new NumberKDPoint<>(-6, 4));
-//		
-//		Iterable<KDPoint<Integer>> found = tree.find(new IntKDRange<>(new IntKDPoint(-8, -9), new IntKDPoint(-1, -1)));
-//		found.
-//		assertEquals(new NumberKDPoint<>(-2, 4), nearest);
+		KDRange<Integer> range = new IntKDRange(new NumberKDPoint<>(-10, -10), new NumberKDPoint<>(10, 10));
+		KDTree<Integer> tree = new IntKDTree(range);
+		
+		tree.add(new NumberKDPoint<>(1, 5));
+		tree.add(new NumberKDPoint<>(5, 5));
+		tree.add(new NumberKDPoint<>(-2, -2));
+		tree.add(new NumberKDPoint<>(4, 8));
+		tree.add(new NumberKDPoint<>(-2, 4));
+		tree.add(new NumberKDPoint<>(2, -8));
+		tree.add(new NumberKDPoint<>(7, 1));
+		tree.add(new NumberKDPoint<>(-2, -6));
+		tree.add(new NumberKDPoint<>(-6, -4));
+		tree.add(new NumberKDPoint<>(-6, 4));
+		
+		List<KDPoint<Integer>> found = tree.find(new IntKDRange(new IntKDPoint(-8, -9), new IntKDPoint(-1, -1)));
+		assertTrue(found.indexOf(new NumberKDPoint<>(-2, -2)) >= 0);
+		assertTrue(found.indexOf(new NumberKDPoint<>(-2, -6)) >= 0);
+		assertTrue(found.indexOf(new NumberKDPoint<>(-6, -4)) >= 0);
 	}
 }

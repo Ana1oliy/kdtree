@@ -117,6 +117,8 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>> {
     }
     
     public void find(Collection<KDPoint<T>> found, KDRange<T> range) {
+    	//System.out.println(key);
+    	
     	if (range.contains(key))
     		found.add(key);
     	

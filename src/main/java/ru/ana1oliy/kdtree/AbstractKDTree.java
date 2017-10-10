@@ -62,7 +62,7 @@ public abstract class AbstractKDTree<T extends Number & Comparable<T>> implement
     }
     
     @Override
-    public Iterable <KDPoint<T>> find(KDRange<T> searchRange) {
+    public List<KDPoint<T>> find(KDRange<T> searchRange) {
     	checkRange(searchRange);
     	
     	if (isEmpty())

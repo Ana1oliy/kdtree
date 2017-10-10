@@ -1,5 +1,7 @@
 package ru.ana1oliy.kdtree;
 
+import java.util.List;
+
 import ru.ana1oliy.kdtree.points.KDPoint;
 import ru.ana1oliy.kdtree.range.KDRange;
 
@@ -31,7 +33,7 @@ public interface KDTree<T extends Number & Comparable<T>> {
 	 * @param searchRange range for searching.
 	 * @return Points in specified range.
 	 */
-	Iterable<KDPoint<T>> find(KDRange<T> searchRange);
+	List<KDPoint<T>> find(KDRange<T> searchRange);
 	
 	/**
 	 * Size of tree. 
