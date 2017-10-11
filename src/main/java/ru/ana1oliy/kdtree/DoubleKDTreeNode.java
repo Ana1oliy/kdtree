@@ -3,7 +3,7 @@ package ru.ana1oliy.kdtree;
 import ru.ana1oliy.kdtree.points.KDPoint;
 import ru.ana1oliy.kdtree.range.KDRange;
 
-class DoubleKDTreeNode extends AbstractKDTreeNode<Double> {
+class DoubleKDTreeNode<G> extends AbstractKDTreeNode<Double, G> {
 
 	public DoubleKDTreeNode(KDPoint<Double> key, KDRange<Double> range) {
         super(key, range);
@@ -19,8 +19,8 @@ class DoubleKDTreeNode extends AbstractKDTreeNode<Double> {
 	}
 
 	@Override
-	protected AbstractKDTreeNode<Double> createNode(KDPoint<Double> key) {
-		return new DoubleKDTreeNode(key);
+	protected AbstractKDTreeNode<Double, G> createNode(KDPoint<Double> key) {
+		return new DoubleKDTreeNode<>(key);
 	}
 	
 	@Override

@@ -15,7 +15,7 @@ import ru.ana1oliy.kdtree.range.KDRange;
  * @param <T> must extends <code>Number</code> class and implement
  * <code>Comparable</code> interface.
  */
-public abstract class AbstractKDTree<T extends Number & Comparable<T>> implements KDTree<T> {
+public abstract class AbstractKDTree<T extends Number & Comparable<T>, G> implements KDTree<T, G> {
 	
     public AbstractKDTree(KDRange<T> range) {
     	if (range == null)
@@ -31,24 +31,38 @@ public abstract class AbstractKDTree<T extends Number & Comparable<T>> implement
     
     private KDRange<T> range;
     
-    private AbstractKDTreeNode<T> root;
+    private AbstractKDTreeNode<T, G> root;
     
     private int size;
     
     private char dimensions;
 
     @Override
-    public void add(KDPoint<T> point) {
+    public void set(KDPoint<T> point, G value) {
     	checkPoint(point);
     	
     	if (!range.contains(point))
     		throw new IllegalArgumentException("Point out of accessible range.");
     	
+    	if (value == null)
+    		throw new IllegalArgumentException("Value can not be null.");
+    	
         if (root == null) {
             root = createNode(point, range);
+            root.setValue(value);
             size++;
-        } else if (root.add(point))
+        } else if (root.add(point, value))
         	size++;
+    }
+    
+    @Override
+    public G get(KDPoint<T> point) {
+    	checkPoint(point);
+    	
+        if (root == null)
+            throw new NoSuchElementException("Nothing to get.");
+            
+        return root.get(point);
     }
     
     @Override
@@ -104,5 +118,5 @@ public abstract class AbstractKDTree<T extends Number & Comparable<T>> implement
     		throw new IllegalArgumentException("Incorrect range dimension.");
     }
     
-    protected abstract AbstractKDTreeNode<T> createNode(KDPoint<T> point, KDRange<T> range);
+    protected abstract AbstractKDTreeNode<T, G> createNode(KDPoint<T> point, KDRange<T> range);
 }

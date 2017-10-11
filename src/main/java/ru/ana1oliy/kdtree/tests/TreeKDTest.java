@@ -21,31 +21,66 @@ public class TreeKDTest {
 	@Test
 	public void testSize() {
 		KDRange<Integer> range = new IntKDRange(new NumberKDPoint<>(0), new NumberKDPoint<>(10));
-		KDTree<Integer> tree = new IntKDTree(range);
+		KDTree<Integer, Integer> tree = new IntKDTree<>(range);
 		
 		assertEquals(0, tree.size());
 		
-		tree.add(new NumberKDPoint<>(1));
-		tree.add(new NumberKDPoint<>(1));
+		tree.set(new NumberKDPoint<>(1), 1);
+		tree.set(new NumberKDPoint<>(1), 2);
 		
 		assertEquals(1, tree.size());
 		
-		tree.add(new NumberKDPoint<>(2));
-		tree.add(new NumberKDPoint<>(3));
-		tree.add(new NumberKDPoint<>(4));
-		tree.add(new NumberKDPoint<>(5));
+		tree.set(new NumberKDPoint<>(2), 3);
+		tree.set(new NumberKDPoint<>(3), 4);
+		tree.set(new NumberKDPoint<>(4), 5);
+		tree.set(new NumberKDPoint<>(5), 6);
 		
 		assertEquals(5, tree.size());
 	}
+	
+	@Test
+	public void testSetGet() {
+		KDRange<Integer> range = new IntKDRange(new NumberKDPoint<>(0), new NumberKDPoint<>(10));
+		KDTree<Integer, Integer> tree = new IntKDTree<>(range);
+		
+		tree.set(new NumberKDPoint<>(1), 1);
+		tree.set(new NumberKDPoint<>(2), 2);
+		tree.set(new NumberKDPoint<>(3), 3);
+		tree.set(new NumberKDPoint<>(4), 4);
+		tree.set(new NumberKDPoint<>(5), 5);
+		
+		assertEquals(new Integer(1), tree.get(new NumberKDPoint<>(1)));
+		assertEquals(new Integer(2), tree.get(new NumberKDPoint<>(2)));
+		assertEquals(new Integer(3), tree.get(new NumberKDPoint<>(3)));
+		assertEquals(new Integer(4), tree.get(new NumberKDPoint<>(4)));
+		assertEquals(new Integer(5), tree.get(new NumberKDPoint<>(5)));
+	}
 
+	@Test
+	public void testDoubleSetGet() {
+		KDRange<Integer> range = new IntKDRange(new NumberKDPoint<>(0), new NumberKDPoint<>(10));
+		KDTree<Integer, Integer> tree = new IntKDTree<>(range);
+		
+		tree.set(new NumberKDPoint<>(1), 1);
+		assertEquals(new Integer(1), tree.get(new NumberKDPoint<>(1)));
+		tree.set(new NumberKDPoint<>(1), 2);
+		assertEquals(new Integer(2), tree.get(new NumberKDPoint<>(1)));
+		tree.set(new NumberKDPoint<>(3), 3);
+		assertEquals(new Integer(3), tree.get(new NumberKDPoint<>(3)));
+		tree.set(new NumberKDPoint<>(3), 4);
+		assertEquals(new Integer(4), tree.get(new NumberKDPoint<>(3)));
+		tree.set(new NumberKDPoint<>(1), 5);
+		assertEquals(new Integer(5), tree.get(new NumberKDPoint<>(1)));
+	}
+	
 	@Test
 	public void testIsEmpty() {
 		KDRange<Integer> range = new IntKDRange(new NumberKDPoint<>(0), new NumberKDPoint<>(10));
-		KDTree<Integer> tree = new IntKDTree(range);
+		KDTree<Integer, Integer> tree = new IntKDTree<>(range);
 		
 		assertTrue(tree.isEmpty());
 		
-		tree.add(new NumberKDPoint<>(2));
+		tree.set(new NumberKDPoint<>(2), 1);
 		
 		assertFalse(tree.isEmpty());
 	}
@@ -53,26 +88,32 @@ public class TreeKDTest {
 	@Test
 	public void testDimensions() {
 		KDRange<Integer> range = new IntKDRange(new NumberKDPoint<>(1, 2, 3, 4, 5), new NumberKDPoint<>(6, 7, 8, 9, 10));
-		KDTree<Integer> tree = new IntKDTree(range);
+		KDTree<Integer, Integer> tree = new IntKDTree<>(range);
 		
 		assertEquals(5, tree.dimensions());
 	}
 	
+	private KDTree<Integer, Integer> createTree() {
+		KDRange<Integer> range = new IntKDRange(new NumberKDPoint<>(-10, -10), new NumberKDPoint<>(10, 10));
+		KDTree<Integer, Integer> tree = new IntKDTree<>(range);
+		
+		tree.set(new NumberKDPoint<>(1, 5), 0);
+		tree.set(new NumberKDPoint<>(5, 5), 0);
+		tree.set(new NumberKDPoint<>(-2, -2), 0);
+		tree.set(new NumberKDPoint<>(4, 8), 0);
+		tree.set(new NumberKDPoint<>(-2, 4), 0);
+		tree.set(new NumberKDPoint<>(2, -8), 0);
+		tree.set(new NumberKDPoint<>(7, 1), 0);
+		tree.set(new NumberKDPoint<>(-2, -6), 0);
+		tree.set(new NumberKDPoint<>(-6, -4), 0);
+		tree.set(new NumberKDPoint<>(-6, 4), 0);
+		
+		return tree;
+	}
+	
 	@Test
 	public void testNearest() {
-		KDRange<Integer> range = new IntKDRange(new NumberKDPoint<>(-10, -10), new NumberKDPoint<>(10, 10));
-		KDTree<Integer> tree = new IntKDTree(range);
-		
-		tree.add(new NumberKDPoint<>(1, 5));
-		tree.add(new NumberKDPoint<>(5, 5));
-		tree.add(new NumberKDPoint<>(-2, -2));
-		tree.add(new NumberKDPoint<>(4, 8));
-		tree.add(new NumberKDPoint<>(-2, 4));
-		tree.add(new NumberKDPoint<>(2, -8));
-		tree.add(new NumberKDPoint<>(7, 1));
-		tree.add(new NumberKDPoint<>(-2, -6));
-		tree.add(new NumberKDPoint<>(-6, -4));
-		tree.add(new NumberKDPoint<>(-6, 4));
+		KDTree<Integer, Integer> tree = createTree();
 		
 		KDPoint<Integer> nearest = tree.nearest(new NumberKDPoint<>(-4, 6));
 		assertEquals(new NumberKDPoint<>(-2, 4), nearest);
@@ -80,19 +121,7 @@ public class TreeKDTest {
 	
 	@Test
 	public void testFind() {
-		KDRange<Integer> range = new IntKDRange(new NumberKDPoint<>(-10, -10), new NumberKDPoint<>(10, 10));
-		KDTree<Integer> tree = new IntKDTree(range);
-		
-		tree.add(new NumberKDPoint<>(1, 5));
-		tree.add(new NumberKDPoint<>(5, 5));
-		tree.add(new NumberKDPoint<>(-2, -2));
-		tree.add(new NumberKDPoint<>(4, 8));
-		tree.add(new NumberKDPoint<>(-2, 4));
-		tree.add(new NumberKDPoint<>(2, -8));
-		tree.add(new NumberKDPoint<>(7, 1));
-		tree.add(new NumberKDPoint<>(-2, -6));
-		tree.add(new NumberKDPoint<>(-6, -4));
-		tree.add(new NumberKDPoint<>(-6, 4));
+		KDTree<Integer, Integer> tree = createTree();
 		
 		List<KDPoint<Integer>> found = tree.find(new IntKDRange(new IntKDPoint(-8, -9), new IntKDPoint(-1, -1)));
 		assertTrue(found.indexOf(new NumberKDPoint<>(-2, -2)) >= 0);
