@@ -46,6 +46,10 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
     	this.value = value;
     }
     
+    public G getValue() {
+    	return value;
+    }
+    
     /**
      * Adds new node into subtree using KDPoint as key.
      * @param key must implement KDPoint interface.
@@ -123,18 +127,19 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
     		return right.hasValue(point);
     	}
     }
-    public KDPoint<T> nearest(double min, KDPoint<T> point) {
+    
+    public AbstractKDTreeNode<T, G> nearest(double min, KDPoint<T> point) {
     	//System.out.println(key);
     	
-    	KDPoint<T> candidate = null;
-    	KDPoint<T> leftCandidate = null;
-    	KDPoint<T> rightCandidate = null;
+    	AbstractKDTreeNode<T, G> candidate = null;
+    	AbstractKDTreeNode<T, G> leftCandidate = null;
+    	AbstractKDTreeNode<T, G> rightCandidate = null;
     	double newMin = min;
     	double dist = key.squaredDistanceTo(point);
     	
     	if (dist < newMin) {
     		newMin = dist;
-    		candidate = key;
+    		candidate = this;
     	}
     	
     	if (left != null && left.mayContainNearest(point, newMin))
@@ -144,8 +149,8 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
     		rightCandidate = right.nearest(newMin, point);
     	
     	if (leftCandidate != null && rightCandidate != null) {
-    		double leftDist = leftCandidate.squaredDistanceTo(point);
-    		double rightDist = rightCandidate.squaredDistanceTo(point);
+    		double leftDist = leftCandidate.key.squaredDistanceTo(point);
+    		double rightDist = rightCandidate.key.squaredDistanceTo(point);
     		
     		if (leftDist < rightDist)
     			return leftCandidate;
@@ -160,6 +165,44 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
    
     	return candidate;
     }
+    
+//    public KDPoint<T> nearest(double min, KDPoint<T> point) {
+//    	//System.out.println(key);
+//    	
+//    	KDPoint<T> candidate = null;
+//    	KDPoint<T> leftCandidate = null;
+//    	KDPoint<T> rightCandidate = null;
+//    	double newMin = min;
+//    	double dist = key.squaredDistanceTo(point);
+//    	
+//    	if (dist < newMin) {
+//    		newMin = dist;
+//    		candidate = key;
+//    	}
+//    	
+//    	if (left != null && left.mayContainNearest(point, newMin))
+//    		leftCandidate = left.nearest(newMin, point);
+//    	
+//    	if (right != null && right.mayContainNearest(point, newMin))
+//    		rightCandidate = right.nearest(newMin, point);
+//    	
+//    	if (leftCandidate != null && rightCandidate != null) {
+//    		double leftDist = leftCandidate.squaredDistanceTo(point);
+//    		double rightDist = rightCandidate.squaredDistanceTo(point);
+//    		
+//    		if (leftDist < rightDist)
+//    			return leftCandidate;
+//    		else
+//    			return rightCandidate;
+//    		
+//    	} else if (leftCandidate != null) {
+//    		return leftCandidate;
+//    	} else if (rightCandidate != null) {
+//    		return rightCandidate;
+//    	}
+//   
+//    	return candidate;
+//    }
     
     public void find(Collection<KDPoint<T>> found, KDRange<T> range) {
     	//System.out.println(key);

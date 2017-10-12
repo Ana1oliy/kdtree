@@ -82,7 +82,17 @@ public abstract class AbstractKDTree<T extends Number & Comparable<T>, G> implem
     	if (isEmpty())
     		throw new NoSuchElementException("Nothing to find.");
     	
-    	return root.nearest(point.squaredDistanceTo(root.key()), point);
+    	return root.nearest(point.squaredDistanceTo(root.key()), point).key();
+    }
+    
+    @Override
+    public G nearestValue(KDPoint<T> point) {
+    	checkPoint(point);
+    	
+    	if (isEmpty())
+    		throw new NoSuchElementException("Nothing to find.");
+    	
+    	return root.nearest(point.squaredDistanceTo(root.key()), point).getValue();
     }
     
     @Override

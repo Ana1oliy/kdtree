@@ -49,7 +49,7 @@ public interface KDTree<T extends Number & Comparable<T>, G> {
 	 * @param point point to find the nearest point.
 	 * @return Value assigned to the point nearest to specified point. Null if nothing is found.
 	 */
-	//G nearestValue(KDPoint<T> point);
+	G nearestValue(KDPoint<T> point);
 	
 	/**
 	 * Finds the points which are in range.

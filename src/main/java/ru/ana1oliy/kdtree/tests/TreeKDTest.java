@@ -10,7 +10,6 @@ import ru.ana1oliy.kdtree.KDTree;
 import ru.ana1oliy.kdtree.IntKDTree;
 import ru.ana1oliy.kdtree.points.IntKDPoint;
 import ru.ana1oliy.kdtree.points.KDPoint;
-import ru.ana1oliy.kdtree.points.NumberKDPoint;
 import ru.ana1oliy.kdtree.range.KDRange;
 import ru.ana1oliy.kdtree.range.IntKDRange;
 
@@ -99,15 +98,15 @@ public class TreeKDTest {
 	}
 	
 	private void fillTree(KDTree<Integer, Integer> tree) {
-		tree.set(new IntKDPoint(1, 5), 0);
-		tree.set(new IntKDPoint(5, 5), 0);
-		tree.set(new IntKDPoint(-2, -2), 0);
-		tree.set(new IntKDPoint(4, 8), 0);
-		tree.set(new IntKDPoint(-2, 4), 0);
-		tree.set(new IntKDPoint(2, -8), 0);
-		tree.set(new IntKDPoint(7, 1), 0);
-		tree.set(new IntKDPoint(-2, -6), 0);
-		tree.set(new IntKDPoint(-6, -4), 0);
+		tree.set(new IntKDPoint(1, 5), 1);
+		tree.set(new IntKDPoint(5, 5), 2);
+		tree.set(new IntKDPoint(-2, -2), 3);
+		tree.set(new IntKDPoint(4, 8), 4);
+		tree.set(new IntKDPoint(-2, 4), 5);
+		tree.set(new IntKDPoint(2, -8), 6);
+		tree.set(new IntKDPoint(7, 1), 7);
+		tree.set(new IntKDPoint(-2, -6), 8);
+		tree.set(new IntKDPoint(-6, -4), 9);
 		tree.set(new IntKDPoint(-6, 4), 0);
 	}
 	
@@ -118,6 +117,15 @@ public class TreeKDTest {
 		
 		KDPoint<Integer> nearest = tree.nearest(new IntKDPoint(-4, 6));
 		assertEquals(new IntKDPoint(-2, 4), nearest);
+	}
+	
+	@Test
+	public void testNearestValue() {
+		KDTree<Integer, Integer> tree = createTree();
+		fillTree(tree);
+		
+		Integer nearest = tree.nearestValue(new IntKDPoint(-4, 6));
+		assertEquals(new Integer(5), nearest);
 	}
 	
 	@Test
