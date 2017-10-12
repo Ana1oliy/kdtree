@@ -66,6 +66,16 @@ public abstract class AbstractKDTree<T extends Number & Comparable<T>, G> implem
     }
     
     @Override
+    public boolean hasValue(KDPoint<T> point) {
+    	checkPoint(point);
+    	
+    	if (root == null)
+    		return false;
+    	
+    	return root.hasValue(point);
+    }
+    
+    @Override
     public KDPoint<T> nearest(KDPoint<T> point) {
     	checkPoint(point);
     	

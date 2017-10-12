@@ -94,7 +94,7 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
     	if (point.equals(key))
     		return value;
     	
-    	if (key.get(dimension).compareTo(this.key.get(dimension)) < 0) {
+    	if (point.get(dimension).compareTo(key.get(dimension)) < 0) {
     		if (left == null)
     			throw new NoSuchElementException("Nothing to get");
     		
@@ -107,7 +107,22 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
     	}
     }
     
-    
+    public boolean hasValue(KDPoint<T> point) {
+    	if (point.equals(key))
+    		return true;
+    	
+    	if (point.get(dimension).compareTo(key.get(dimension)) < 0) {
+    		if (left == null)
+    			return false;
+    		
+    		return left.hasValue(point);
+    	} else {
+    		if (right == null)
+    			return false;
+    		
+    		return right.hasValue(point);
+    	}
+    }
     public KDPoint<T> nearest(double min, KDPoint<T> point) {
     	//System.out.println(key);
     	

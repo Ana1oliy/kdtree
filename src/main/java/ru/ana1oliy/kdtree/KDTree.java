@@ -35,7 +35,7 @@ public interface KDTree<T extends Number & Comparable<T>, G> {
 	 * @param point key for check. Can not be null.
 	 * @return True if into the tree was added value for specified key point, otherwise false.
 	 */
-	//boolean hasValue(KDPoint<T> point);
+	boolean hasValue(KDPoint<T> point);
 	
 	/**
 	 * Finds the point in tree nearest to specified point.
