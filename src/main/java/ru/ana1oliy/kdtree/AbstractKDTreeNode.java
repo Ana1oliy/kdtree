@@ -1,10 +1,10 @@
 package ru.ana1oliy.kdtree;
 
-import java.util.Collection;
 import java.util.NoSuchElementException;
 
 import ru.ana1oliy.kdtree.points.KDPoint;
 import ru.ana1oliy.kdtree.range.KDRange;
+import ru.ana1oliy.utils.Visitor;
 
 /**
  * Internal tree node class. Provides functionality for add child nodes, search points
@@ -166,55 +166,17 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
     	return candidate;
     }
     
-//    public KDPoint<T> nearest(double min, KDPoint<T> point) {
-//    	//System.out.println(key);
-//    	
-//    	KDPoint<T> candidate = null;
-//    	KDPoint<T> leftCandidate = null;
-//    	KDPoint<T> rightCandidate = null;
-//    	double newMin = min;
-//    	double dist = key.squaredDistanceTo(point);
-//    	
-//    	if (dist < newMin) {
-//    		newMin = dist;
-//    		candidate = key;
-//    	}
-//    	
-//    	if (left != null && left.mayContainNearest(point, newMin))
-//    		leftCandidate = left.nearest(newMin, point);
-//    	
-//    	if (right != null && right.mayContainNearest(point, newMin))
-//    		rightCandidate = right.nearest(newMin, point);
-//    	
-//    	if (leftCandidate != null && rightCandidate != null) {
-//    		double leftDist = leftCandidate.squaredDistanceTo(point);
-//    		double rightDist = rightCandidate.squaredDistanceTo(point);
-//    		
-//    		if (leftDist < rightDist)
-//    			return leftCandidate;
-//    		else
-//    			return rightCandidate;
-//    		
-//    	} else if (leftCandidate != null) {
-//    		return leftCandidate;
-//    	} else if (rightCandidate != null) {
-//    		return rightCandidate;
-//    	}
-//   
-//    	return candidate;
-//    }
-    
-    public void find(Collection<KDPoint<T>> found, KDRange<T> range) {
+    public void find(Visitor<AbstractKDTreeNode<T, G>> visitor, KDRange<T> range) {
     	//System.out.println(key);
     	
     	if (range.contains(key))
-    		found.add(key);
+    		visitor.visit(this);
     	
     	if (left != null && left.isSenseToSearch(range))
-    		left.find(found, range);
+    		left.find(visitor, range);
     	
     	if (right != null && right.isSenseToSearch(range))
-    		right.find(found, range);
+    		right.find(visitor, range);
     }
     
     private boolean mayContainNearest(KDPoint<T> point, double radiusSquared) {
@@ -224,6 +186,7 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
     private boolean isSenseToSearch(KDRange<T> range) {
     	return this.range.intersect(range);
     }
+    
     protected abstract T getDistanceByAxis(T a, T b);
     
     protected abstract AbstractKDTreeNode<T, G> createNode(KDPoint<T> key);

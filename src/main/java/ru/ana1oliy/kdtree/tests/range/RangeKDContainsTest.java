@@ -12,7 +12,6 @@ import org.junit.runners.Parameterized;
 import ru.ana1oliy.kdtree.points.KDPoint;
 import ru.ana1oliy.kdtree.points.NumberKDPoint;
 import ru.ana1oliy.kdtree.range.KDRange;
-import ru.ana1oliy.kdtree.range.AbstractKDRange;
 import ru.ana1oliy.kdtree.range.IntKDRange;
 
 @RunWith(Parameterized.class)

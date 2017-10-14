@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 
 import ru.ana1oliy.kdtree.points.KDPoint;
 import ru.ana1oliy.kdtree.range.KDRange;
+import ru.ana1oliy.utils.Visitor;
 
 /**
  * 
@@ -103,7 +104,34 @@ public abstract class AbstractKDTree<T extends Number & Comparable<T>, G> implem
     		throw new NoSuchElementException("Nothing to find.");
     	
     	List<KDPoint<T>> result = new ArrayList<>();
-    	root.find(result, searchRange);
+    	Visitor<AbstractKDTreeNode<T, G>> visitor = new Visitor<AbstractKDTreeNode<T, G>>() {
+    		public void visit(AbstractKDTreeNode<T, G> node) {
+    			result.add(node.key());
+    		}
+    	};
+    	
+    	root.find(visitor, searchRange);
+    	
+    	return result;
+    }
+    
+    @Override
+    public List<G> findValues(KDRange<T> searchRange)
+    {
+    	checkRange(searchRange);
+    	
+    	if (isEmpty())
+    		throw new NoSuchElementException("Nothing to find.");
+    	
+    	List<G> result = new ArrayList<>();
+    	Visitor<AbstractKDTreeNode<T, G>> visitor = new Visitor<AbstractKDTreeNode<T, G>>() {
+    		public void visit(AbstractKDTreeNode<T, G> node) {
+    			result.add(node.getValue());
+    		}
+    	};
+    	
+    	root.find(visitor, searchRange);
+    	
     	return result;
     }
     

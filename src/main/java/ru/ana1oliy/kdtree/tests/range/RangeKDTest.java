@@ -14,7 +14,6 @@ import ru.ana1oliy.kdtree.points.IntKDPoint;
 import ru.ana1oliy.kdtree.points.KDPoint;
 import ru.ana1oliy.kdtree.points.NumberKDPoint;
 import ru.ana1oliy.kdtree.range.KDRange;
-import ru.ana1oliy.kdtree.range.AbstractKDRange;
 import ru.ana1oliy.kdtree.range.IntKDRange;
 
 @RunWith(Theories.class)

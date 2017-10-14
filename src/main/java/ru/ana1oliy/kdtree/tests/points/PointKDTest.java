@@ -30,7 +30,7 @@ public class PointKDTest {
 	@Test
 	public void testCreateByNullArrayException() {
 		thrown.expect(IllegalArgumentException.class);
-		new NumberKDPoint<Integer>(null);
+		new NumberKDPoint<Integer>((Integer[]) null);
 	}
 	
 	@Test

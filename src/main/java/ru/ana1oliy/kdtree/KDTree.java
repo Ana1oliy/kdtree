@@ -63,7 +63,7 @@ public interface KDTree<T extends Number & Comparable<T>, G> {
 	 * @param searchRange range for searching.
 	 * @return values assigned to the points in specified range. Null if nothing is found.
 	 */
-	//List<G> findValues(KDRange<T> searchRange);
+	List<G> findValues(KDRange<T> searchRange);
 	
 	/**
 	 * Size of tree. 

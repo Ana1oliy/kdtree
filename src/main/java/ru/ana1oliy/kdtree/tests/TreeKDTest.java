@@ -140,6 +140,17 @@ public class TreeKDTest {
 	}
 	
 	@Test
+	public void testFindValue() {
+		KDTree<Integer, Integer> tree = createTree();
+		fillTree(tree);
+		
+		List<Integer> found = tree.findValues(new IntKDRange(new IntKDPoint(-8, -9), new IntKDPoint(-1, -1)));
+		assertTrue(found.indexOf(3) >= 0);
+		assertTrue(found.indexOf(8) >= 0);
+		assertTrue(found.indexOf(9) >= 0);
+	}
+	
+	@Test
 	public void testHasValue() {
 		KDTree<Integer, Integer> tree = createTree();
 		
