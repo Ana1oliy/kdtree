@@ -9,30 +9,29 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import ru.ana1oliy.kdtree.points.NumberKDPoint;
-import ru.ana1oliy.kdtree.range.KDRange;
-import ru.ana1oliy.kdtree.range.IntKDRange;
+import ru.ana1oliy.kdtree.KDPoint;
+import ru.ana1oliy.kdtree.KDRange;
 
 @RunWith(Parameterized.class)
 public class RangeKDSplittingTest {
 
-	public RangeKDSplittingTest(Integer coordinate, int dimension, KDRange<Integer> lowerHalf, KDRange<Integer> higherHalf) {
+	public RangeKDSplittingTest(Double coordinate, int dimension, KDRange lowerHalf, KDRange higherHalf) {
 		this.coordinate = coordinate;
 		this.dimension = (char) dimension;
 		this.lowerHalf = lowerHalf;
 		this.higherHalf = higherHalf;
-		range = new IntKDRange(new NumberKDPoint<>(1, 2, 3), new NumberKDPoint<>(11, 12, 13));
+		range = new KDRange(new KDPoint(1.0, 2.0, 3.0), new KDPoint(11.0, 12.0, 13.0));
 	}
 	
-	private Integer coordinate;
+	private Double coordinate;
 	
 	private char dimension;
 	
-	private KDRange<Integer> lowerHalf;
+	private KDRange lowerHalf;
 	
-	private KDRange<Integer> higherHalf;
+	private KDRange higherHalf;
 	
-	private KDRange<Integer> range;
+	private KDRange range;
 	
 	/**
 	 * Data for check splitting range range {{1, 2, 3}, {11, 12, 13}}.
@@ -40,17 +39,17 @@ public class RangeKDSplittingTest {
 	@Parameterized.Parameters
 	public static List<Object[]> pointsSet() {
 	    return Arrays.asList(new Object[][] {
-		    {5,		0,		new IntKDRange(new NumberKDPoint<>(1, 2, 3), new NumberKDPoint<>(5, 12, 13)),		new IntKDRange(new NumberKDPoint<>(5, 2, 3), new NumberKDPoint<>(11, 12, 13))},
-		    {1,		0,		new IntKDRange(new NumberKDPoint<>(1, 2, 3), new NumberKDPoint<>(1, 12, 13)),		new IntKDRange(new NumberKDPoint<>(1, 2, 3), new NumberKDPoint<>(11, 12, 13))},
-		    {11,	0,		new IntKDRange(new NumberKDPoint<>(1, 2, 3), new NumberKDPoint<>(11, 12, 13)),		new IntKDRange(new NumberKDPoint<>(11, 2, 3), new NumberKDPoint<>(11, 12, 13))},
+		    {5.0,	0,		new KDRange(new KDPoint(1.0, 2.0, 3.0), new KDPoint(5.0, 12.0, 13.0)),		new KDRange(new KDPoint(5.0, 2.0, 3.0), new KDPoint(11.0, 12.0, 13.0))},
+		    {1.0,	0,		new KDRange(new KDPoint(1.0, 2.0, 3.0), new KDPoint(1.0, 12.0, 13.0)),		new KDRange(new KDPoint(1.0, 2.0, 3.0), new KDPoint(11.0, 12.0, 13.0))},
+		    {11.0,	0,		new KDRange(new KDPoint(1.0, 2.0, 3.0), new KDPoint(11.0, 12.0, 13.0)),		new KDRange(new KDPoint(11.0, 2.0, 3.0), new KDPoint(11.0, 12.0, 13.0))},
 		    
-		    {6,		1,		new IntKDRange(new NumberKDPoint<>(1, 2, 3), new NumberKDPoint<>(11, 6, 13)),		new IntKDRange(new NumberKDPoint<>(1, 6, 3), new NumberKDPoint<>(11, 12, 13))},
-		    {2,		1,		new IntKDRange(new NumberKDPoint<>(1, 2, 3), new NumberKDPoint<>(11, 2, 13)),		new IntKDRange(new NumberKDPoint<>(1, 2, 3), new NumberKDPoint<>(11, 12, 13))},
-		    {12,	1,		new IntKDRange(new NumberKDPoint<>(1, 2, 3), new NumberKDPoint<>(11, 12, 13)),		new IntKDRange(new NumberKDPoint<>(1, 12, 3), new NumberKDPoint<>(11, 12, 13))},
+		    {6.0,	1,		new KDRange(new KDPoint(1.0, 2.0, 3.0), new KDPoint(11.0, 6.0, 13.0)),		new KDRange(new KDPoint(1.0, 6.0, 3.0), new KDPoint(11.0, 12.0, 13.0))},
+		    {2.0,	1,		new KDRange(new KDPoint(1.0, 2.0, 3.0), new KDPoint(11.0, 2.0, 13.0)),		new KDRange(new KDPoint(1.0, 2.0, 3.0), new KDPoint(11.0, 12.0, 13.0))},
+		    {12.0,	1,		new KDRange(new KDPoint(1.0, 2.0, 3.0), new KDPoint(11.0, 12.0, 13.0)),		new KDRange(new KDPoint(1.0, 12.0, 3.0), new KDPoint(11.0, 12.0, 13.0))},
 		    
-		    {5,		2,		new IntKDRange(new NumberKDPoint<>(1, 2, 3), new NumberKDPoint<>(11, 12, 5)),		new IntKDRange(new NumberKDPoint<>(1, 2, 5), new NumberKDPoint<>(11, 12, 13))},
-		    {3,		2,		new IntKDRange(new NumberKDPoint<>(1, 2, 3), new NumberKDPoint<>(11, 12, 3)),		new IntKDRange(new NumberKDPoint<>(1, 2, 3), new NumberKDPoint<>(11, 12, 13))},
-		    {13,	2,		new IntKDRange(new NumberKDPoint<>(1, 2, 3), new NumberKDPoint<>(11, 12, 13)),		new IntKDRange(new NumberKDPoint<>(1, 2, 13), new NumberKDPoint<>(11, 12, 13))},
+		    {5.0,	2,		new KDRange(new KDPoint(1.0, 2.0, 3.0), new KDPoint(11.0, 12.0, 5.0)),		new KDRange(new KDPoint(1.0, 2.0, 5.0), new KDPoint(11.0, 12.0, 13.0))},
+		    {3.0,	2,		new KDRange(new KDPoint(1.0, 2.0, 3.0), new KDPoint(11.0, 12.0, 3.0)),		new KDRange(new KDPoint(1.0, 2.0, 3.0), new KDPoint(11.0, 12.0, 13.0))},
+		    {13.0,	2,		new KDRange(new KDPoint(1.0, 2.0, 3.0), new KDPoint(11.0, 12.0, 13.0)),		new KDRange(new KDPoint(1.0, 2.0, 13.0), new KDPoint(11.0, 12.0, 13.0))},
 	    });
 	}
 	

@@ -2,43 +2,41 @@ package ru.ana1oliy.kdtree;
 
 import java.util.NoSuchElementException;
 
-import ru.ana1oliy.kdtree.points.KDPoint;
-import ru.ana1oliy.kdtree.range.KDRange;
 import ru.ana1oliy.utils.Visitor;
 
 /**
  * Internal tree node class. Provides functionality for add child nodes, search points
  * in range and nearest point.
  */
-abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
+class KDTreeNode<G> {
 
-    public AbstractKDTreeNode(KDPoint<T> key, KDRange<T> range) {
+    public KDTreeNode(KDPoint key, KDRange range) {
         this.key = key;
         this.range = range;
         dimension = 0;
     }
     
-    protected AbstractKDTreeNode(KDPoint<T> key) {
+    protected KDTreeNode(KDPoint key) {
         this.key = key;
     }
 
-    private KDRange<T> range;
+    private KDRange range;
     
     private char dimension;
 
-    private KDPoint<T> key;
+    private KDPoint key;
     
     private G value;
 
-    private AbstractKDTreeNode<T, G> left;
+    private KDTreeNode<G> left;
 
-    private AbstractKDTreeNode<T, G> right;
+    private KDTreeNode<G> right;
 
-    public KDPoint<T> key() {
+    public KDPoint key() {
     	return key;
     }
     
-    public KDRange<T> range() {
+    public KDRange range() {
     	return range;
     }
     
@@ -54,7 +52,7 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
      * Adds new node into subtree using KDPoint as key.
      * @param key must implement KDPoint interface.
      */
-    public boolean add(KDPoint<T> key, G value) {
+    public boolean add(KDPoint key, G value) {
     	if (this.key.equals(key)) {
     		this.value = value;
     		return false;
@@ -68,7 +66,7 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
         return true;
     }
 
-    private void addLeft(KDPoint<T> leftKey, G value) {
+    private void addLeft(KDPoint leftKey, G value) {
         if (left == null) {
             left = createChildNode(leftKey);
             left.range = range.lowerHalf(key.get(dimension), dimension);
@@ -77,7 +75,7 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
             left.add(leftKey, value);
     }
 
-    private void addRight(KDPoint<T> rightKkey, G value) {
+    private void addRight(KDPoint rightKkey, G value) {
         if (right == null) {
             right = createChildNode(rightKkey);
             right.range = range.higherHalf(key.get(dimension), dimension);
@@ -86,15 +84,15 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
             right.add(rightKkey, value);
     }
 
-    private AbstractKDTreeNode<T, G> createChildNode(KDPoint<T> key) {
-        AbstractKDTreeNode<T, G> child = createNode(key);
+    private KDTreeNode<G> createChildNode(KDPoint key) {
+        KDTreeNode<G> child = new KDTreeNode<>(key);
         child.dimension = KDTreeUtils.nextDimension(dimension, key.dimensions());
 
         return child;
     }
     
     
-    public G get(KDPoint<T> point) {
+    public G get(KDPoint point) {
     	if (point.equals(key))
     		return value;
     	
@@ -111,7 +109,7 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
     	}
     }
     
-    public boolean hasValue(KDPoint<T> point) {
+    public boolean hasValue(KDPoint point) {
     	if (point.equals(key))
     		return true;
     	
@@ -128,12 +126,12 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
     	}
     }
     
-    public AbstractKDTreeNode<T, G> nearest(double min, KDPoint<T> point) {
+    public KDTreeNode<G> nearest(double min, KDPoint point) {
     	//System.out.println(key);
     	
-    	AbstractKDTreeNode<T, G> candidate = null;
-    	AbstractKDTreeNode<T, G> leftCandidate = null;
-    	AbstractKDTreeNode<T, G> rightCandidate = null;
+    	KDTreeNode<G> candidate = null;
+    	KDTreeNode<G> leftCandidate = null;
+    	KDTreeNode<G> rightCandidate = null;
     	double newMin = min;
     	double dist = key.squaredDistanceTo(point);
     	
@@ -166,7 +164,7 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
     	return candidate;
     }
     
-    public void find(Visitor<AbstractKDTreeNode<T, G>> visitor, KDRange<T> range) {
+    public void find(Visitor<KDTreeNode<G>> visitor, KDRange range) {
     	//System.out.println(key);
     	
     	if (range.contains(key))
@@ -179,17 +177,15 @@ abstract class AbstractKDTreeNode<T extends Number & Comparable<T>, G> {
     		right.find(visitor, range);
     }
     
-    private boolean mayContainNearest(KDPoint<T> point, double radiusSquared) {
+    private boolean mayContainNearest(KDPoint point, double radiusSquared) {
     	return range.squaredDistanceTo(point) <= radiusSquared;
     }
     
-    private boolean isSenseToSearch(KDRange<T> range) {
+    private boolean isSenseToSearch(KDRange range) {
     	return this.range.intersect(range);
     }
-    
-    protected abstract T getDistanceByAxis(T a, T b);
-    
-    protected abstract AbstractKDTreeNode<T, G> createNode(KDPoint<T> key);
-    
-    protected abstract T[] createArray(char size);
+
+	private Double getDistanceByAxis(Double a, Double b) {
+		return Math.abs(a - b);
+	}
 }

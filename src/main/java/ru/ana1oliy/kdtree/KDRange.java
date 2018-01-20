@@ -1,11 +1,10 @@
-package ru.ana1oliy.kdtree.range;
+package ru.ana1oliy.kdtree;
 
-import ru.ana1oliy.kdtree.points.KDPoint;
-import ru.ana1oliy.kdtree.points.NumberKDPoint;
 import ru.ana1oliy.utils.ComparableUtils;
 
 /**
- * Implements <code>KDRange</code> interface. 
+ * Represents multidimensional range. Provides functionality for check contains
+ * range any point or not and creation of new ranges by splitting this range.<b>
  * <b>NOTE</b>: One range is equal to other range if the <i>from</i> point 
  * of the first range is equal to the <i>from</i> point of the second range and
  * the <i>to</i> point of the first range is equal to the <i>to</i> point of
@@ -13,11 +12,8 @@ import ru.ana1oliy.utils.ComparableUtils;
  * to the <i>to</i> point of the second range and the <i>to</i> point of the
  * first range is equal to the <i>from</i> point of the second range.
  * @author Ana1oliy
- *
- * @param <T> must extends <code>Number</code> class and implement
- * <code>Comparable</code> interface.
  */
-public abstract class AbstractKDRange<T extends Number & Comparable<T>> implements KDRange<T> {
+public class KDRange {
 
 	/**
 	 * Creates range by two points. Dimensions of this points must be equals. 
@@ -25,7 +21,7 @@ public abstract class AbstractKDRange<T extends Number & Comparable<T>> implemen
 	 * @param from first point.
 	 * @param to second point.
 	 */
-	public AbstractKDRange(KDPoint<T> from, KDPoint<T> to) {
+	public KDRange(KDPoint from, ru.ana1oliy.kdtree.KDPoint to) {
 		if (from == null || to == null)
 			throw new IllegalArgumentException("Initial points can not be null.");
 		
@@ -37,24 +33,35 @@ public abstract class AbstractKDRange<T extends Number & Comparable<T>> implemen
 		center = calculateCenter();
 	}
 	
-	private KDPoint<T> from;
+	private KDPoint from;
 	
-	private KDPoint<T> to;
+	private KDPoint to;
 	
-	private KDPoint<T> center;
+	private KDPoint center;
 	
-	@Override
-	public KDPoint<T> from() {
+	/**
+	 * The point represents beginning of the range.
+	 * @return Point which can not be null.
+	 */
+	public KDPoint from() {
 		return from;
 	}
 
-	@Override
-	public KDPoint<T> to() {
+	/**
+	 * The point represents end of the range.
+	 * @return Point which can not be null.
+	 */
+	public KDPoint to() {
 		return to;
 	}
 
-	@Override
-	public boolean contains(KDPoint<T> point) {
+	/**
+	 * Checks that specified point is included into the range inclusive.
+	 * Dimensions of the point and the range must be equals.
+	 * @param point point for check. Can not be null.
+	 * @return <code>true</code> if point is included into the range, otherwise <code>false</code>.
+	 */
+	public boolean contains(KDPoint point) {
 		if (point == null)
 			throw new IllegalArgumentException("Point can not be null.");
 		
@@ -69,18 +76,28 @@ public abstract class AbstractKDRange<T extends Number & Comparable<T>> implemen
 		return true;
 	}
 
-	@Override
+	/**
+	 * @return Dimensions count of the range.
+	 */
 	public char dimensions() {
 		return from.dimensions();
 	}
 
-	@Override
-	public KDRange<T> lowerHalf(T coordinate, char dimension) {
+	/**
+	 * Splits range by specified coordinate and dimension and returns half which
+	 * have lower values of coordinates for specified dimension. Line represented by this
+	 * dimension and coordinate must intersect range, otherwise you will get
+	 * <code>IllegalArgumentException</code> exception. 
+	 * @param coordinate can not be null.
+	 * @param dimension can not out of this range dimensions.
+	 * @return New range of half which have lower values of coordinates for specified dimension.
+	 */
+	public KDRange lowerHalf(Double coordinate, char dimension) {
 		checkDimension(dimension);
 		checkSplitCoordinate(coordinate);
 		
-		KDPoint<T> min;
-		KDPoint<T> max;
+		KDPoint min;
+		KDPoint max;
 		
 		if (from.get(dimension).compareTo(to.get(dimension)) < 0) {
 			min = from;
@@ -90,19 +107,27 @@ public abstract class AbstractKDRange<T extends Number & Comparable<T>> implemen
 			max = from;
 		}
 		
-		KDPoint<T> splitPoint = max.alignedPoint(coordinate, dimension);
+		KDPoint splitPoint = max.alignedPoint(coordinate, dimension);
 		checkSplitPoint(splitPoint);
 		
-		return createRange(min, splitPoint);
+		return new KDRange(min, splitPoint);
 	}
 	
-	@Override
-	public KDRange<T> higherHalf(T coordinate, char dimension) {
+	/**
+	 * Splits range by specified coordinate and dimension and returns half which
+	 * have higher values of coordinates for specified dimension. Line represented by this
+	 * dimension and coordinate must intersect range, otherwise you will get
+	 * <code>IllegalArgumentException</code> exception. 
+	 * @param coordinate can not be null.
+	 * @param dimension can not out of this range dimensions.
+	 * @return New range of half which have higher values of coordinates for specified dimension.
+	 */
+	public KDRange higherHalf(Double coordinate, char dimension) {
 		checkDimension(dimension);
 		checkSplitCoordinate(coordinate);
 		
-		KDPoint<T> min;
-		KDPoint<T> max;
+		KDPoint min;
+		KDPoint max;
 		
 		if (from.get(dimension).compareTo(to.get(dimension)) < 0) {
 			min = from;
@@ -112,33 +137,41 @@ public abstract class AbstractKDRange<T extends Number & Comparable<T>> implemen
 			max = from;
 		}
 		
-		KDPoint<T> splitPoint = min.alignedPoint(coordinate, dimension);
+		KDPoint splitPoint = min.alignedPoint(coordinate, dimension);
 		checkSplitPoint(splitPoint);
 		
-		return createRange(splitPoint, max);
+		return new KDRange(splitPoint, max);
 	}
 	
-	@Override
-	public KDPoint<T> center() {
+	/**
+	 * Center of the range.
+	 */
+	public KDPoint center() {
 		return center;
 	}
 	
-	@Override
-	public T size(char dimension) {
+	/**
+	 * Size of the range by dimension.
+	 */
+	public Double size(char dimension) {
 		return distanceByAxis(from.get(dimension), to.get(dimension));
 	}
 	
-	@Override
-	public double squaredDistanceTo(KDPoint<T> point) {
+	/**
+     * Calculates minimal squared distance between the specified point and the range border.
+     * @param point must have the same dimension and can not be null.
+     * @return Distance to the range border.
+     */
+	public double squaredDistanceTo(KDPoint point) {
 		checkPoint(point);
 		
 		double squaredDistance = 0;
 		
 		for (char d = 0; d < dimensions(); d++) {
 			double delta = 0;
-			T pointCoordinate = point.get(d);
-			T maxCoordinate = maxCoordinate(this, d);
-			T minCoordinate = minCoordinate(this, d);
+			Double pointCoordinate = point.get(d);
+			Double maxCoordinate = maxCoordinate(this, d);
+			Double minCoordinate = minCoordinate(this, d);
 			
 			if (pointCoordinate.compareTo(minCoordinate) < 0)
 				delta = minCoordinate.doubleValue() - pointCoordinate.doubleValue();
@@ -151,13 +184,16 @@ public abstract class AbstractKDRange<T extends Number & Comparable<T>> implemen
 		return squaredDistance;
 	}
 	
-	@Override
-	public double distanceTo(KDPoint<T> point) {
+	/**
+     * Calculates minimal distance between the specified point and the range border.
+     * @param point must have the same dimension and can not be null.
+     * @return Distance to the range border.
+     */
+	public double distanceTo(KDPoint point) {
 		return Math.sqrt(squaredDistanceTo(point));
 	}
 	
-	@Override
-	public boolean intersect(KDRange<T> range) {
+	public boolean intersect(KDRange range) {
 		checkRange(range);
 		
 		for (char d = 0; d < dimensions(); d++) {
@@ -180,8 +216,7 @@ public abstract class AbstractKDRange<T extends Number & Comparable<T>> implemen
     	if (!getClass().isAssignableFrom(object.getClass()))
     		return false;
     	
-    	@SuppressWarnings("unchecked")
-		KDRange<T> other = (KDRange<T>) object;
+		KDRange other = (KDRange) object;
     	
     	if (dimensions() != other.dimensions())
     		return false;
@@ -202,16 +237,16 @@ public abstract class AbstractKDRange<T extends Number & Comparable<T>> implemen
 		return builder.toString();
 	}
 	
-	private KDPoint<T> calculateCenter() {
-		T[] coordinates = createCoordinatesArray();
+	private KDPoint calculateCenter() {
+		Double[] coordinates = new Double[dimensions()];
 		
 		for (char d = 0; d < dimensions(); d++)
 			coordinates[d] = middleOf(from.get(d), to.get(d));
 		
-		return new NumberKDPoint<T>(coordinates);
+		return new KDPoint(coordinates);
 	}
 	
-	protected static <T extends Number & Comparable<T>> T minCoordinate(KDRange<T> range, char dimension) {
+	private static Double minCoordinate(KDRange range, char dimension) {
 		if (range.from().get(dimension).compareTo(range.to().get(dimension)) < 0) {
 			return range.from().get(dimension);
 		} else {
@@ -219,37 +254,40 @@ public abstract class AbstractKDRange<T extends Number & Comparable<T>> implemen
 		}
 	}
 	
-	protected static <T extends Number & Comparable<T>> T maxCoordinate(KDRange<T> range, char dimension) {
+	private static Double maxCoordinate(KDRange range, char dimension) {
 		if (range.from().get(dimension).compareTo(range.to().get(dimension)) > 0) {
 			return range.from().get(dimension);
 		} else {
 			return range.to().get(dimension);
 		}
 	}
-	protected abstract T[] createCoordinatesArray();
 	
-	protected abstract T middleOf(T a, T b);
-	
-	protected abstract KDRange<T> createRange(KDPoint<T> from, KDPoint<T> to);
-	
-	protected abstract T distanceByAxis(T a, T b);
+	private Double middleOf(Double a, Double b) {
+		return a + (b - a) / 2;
+	}
+//	
+//	protected abstract KDRange createRange(KDPoint from, KDPoint to);
+//	
+	protected Double distanceByAxis(Double a, Double b) {
+		return Math.abs(a - b);
+	}
 	
 	private void checkDimension(char dimension) {
 		if (dimension >= dimensions())
 			throw new IllegalArgumentException("Dimension does not exist.");
 	}
 	
-	private void checkSplitCoordinate(T coordinate) {
+	private void checkSplitCoordinate(Double coordinate) {
 		if (coordinate == null)
 			throw new IllegalArgumentException("Coordinate can not be null.");
 	}
 	
-	private void checkSplitPoint(KDPoint<T> point) {
+	private void checkSplitPoint(KDPoint point) {
 		if (!contains(point))
 			throw new IllegalArgumentException("Split line represented by dimension and coordinate must intersect the range.");
 	}
 	
-	private void checkPoint(KDPoint<T> point) {
+	private void checkPoint(KDPoint point) {
     	if (point == null)
     		throw new IllegalArgumentException("Point can not be null.");
     	
@@ -258,7 +296,7 @@ public abstract class AbstractKDRange<T extends Number & Comparable<T>> implemen
     }
 	
 	
-	private void checkRange(KDRange<T> range) {
+	private void checkRange(KDRange range) {
     	if (range == null)
     		throw new IllegalArgumentException("Range can not be null.");
     	

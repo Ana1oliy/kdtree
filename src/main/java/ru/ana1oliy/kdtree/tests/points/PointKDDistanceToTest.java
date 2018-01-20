@@ -9,22 +9,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import ru.ana1oliy.kdtree.points.NumberKDPoint;
+import ru.ana1oliy.kdtree.KDPoint;
 
 @RunWith(Parameterized.class)
 public class PointKDDistanceToTest {
 
-	public PointKDDistanceToTest(int x1, int y1, int z1, int x2, int y2, int z2, double squared, double distance) {
+	public PointKDDistanceToTest(double x1, double y1, double z1, double x2, double y2, double z2, double squared, double distance) {
 		this.squared = squared;
 		this.distance = distance;
 		
-		point1 = new NumberKDPoint<>(x1, y1, z1);
-		point2 = new NumberKDPoint<>(x2, y2, z2);
+		point1 = new KDPoint(x1, y1, z1);
+		point2 = new KDPoint(x2, y2, z2);
 	}
 	
-	private NumberKDPoint<Integer> point1;
+	private KDPoint point1;
 	
-	private NumberKDPoint<Integer> point2;
+	private KDPoint point2;
 	
 	private double squared;
 	
@@ -33,12 +33,12 @@ public class PointKDDistanceToTest {
 	@Parameterized.Parameters
 	public static List<Object[]> isEmptyData() {
 	    return Arrays.asList(new Object[][] {
-		    {0, 0, 0,					1, 1, 1,					3.0,				1.7320508075688772},
-		    {1, 1, 1,					1, 1, 2,					1.0,				1.0},
-		    {2, 2, 2,					3, 2, 2,					1.0,				1.0},
-		    {3, 3, 3,					3, 4, 3,					1.0,				1.0},
-		    {1, 2, 3,					4, 5, 6,					27.0,				5.196152422706632},
-		    {200, 0, 10556,				12311, 123231, 999999, 		994330005931.0,		997160.9729281426}
+		    {0.0, 0.0, 0.0,			1.0, 1.0, 1.0,					3.0,				1.7320508075688772},
+		    {1.0, 1.0, 1.0,			1.0, 1.0, 2.0,					1.0,				1.0},
+		    {2.0, 2.0, 2.0,			3.0, 2.0, 2.0,					1.0,				1.0},
+		    {3.0, 3.0, 3.0,			3.0, 4.0, 3.0,					1.0,				1.0},
+		    {1.0, 2.0, 3.0,			4.0, 5.0, 6.0,					27.0,				5.196152422706632},
+		    {200.0, 0.0, 10556.0,	12311.0, 123231.0, 999999.0,	994330005931.0,		997160.9729281426}
 	    });
 	}
 	

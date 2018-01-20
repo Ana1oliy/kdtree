@@ -9,25 +9,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import ru.ana1oliy.kdtree.points.KDPoint;
-import ru.ana1oliy.kdtree.points.NumberKDPoint;
-import ru.ana1oliy.kdtree.range.KDRange;
-import ru.ana1oliy.kdtree.range.IntKDRange;
+import ru.ana1oliy.kdtree.KDPoint;
+import ru.ana1oliy.kdtree.KDRange;
 
 @RunWith(Parameterized.class)
 public class RangeKDContainsTest {
 
-	public RangeKDContainsTest(KDPoint<Integer> point, boolean inRange) {
+	public RangeKDContainsTest(KDPoint point, boolean inRange) {
 		this.point = point;
 		this.inRange = inRange;
-		range = new IntKDRange(new NumberKDPoint<>(-5, 3), new NumberKDPoint<>(10, -4));
+		range = new KDRange(new KDPoint(-5.0, 3.0), new KDPoint(10.0, -4.0));
 	}
 	
-	private KDPoint<Integer> point;
+	private KDPoint point;
 	
 	private boolean inRange;
 	
-	private KDRange<Integer> range;
+	private KDRange range;
 	
 	/**
 	 * Data for check is point in range {{-5, 3}, {10, -4}}.
@@ -35,27 +33,27 @@ public class RangeKDContainsTest {
 	@Parameterized.Parameters
 	public static List<Object[]> pointsSet() {
 	    return Arrays.asList(new Object[][] {
-		    {new NumberKDPoint<Integer>(-5, 3),		true},
-		    {new NumberKDPoint<Integer>(10, 3),		true},
-		    {new NumberKDPoint<Integer>(-5, -4),	true},
-		    {new NumberKDPoint<Integer>(10, -4),	true},
+		    {new KDPoint(-5.0, 3.0),	true},
+		    {new KDPoint(10.0, 3.0),	true},
+		    {new KDPoint(-5.0, -4.0),	true},
+		    {new KDPoint(10.0, -4.0),	true},
 		    
-		    {new NumberKDPoint<Integer>(-5, -1),	true},
-		    {new NumberKDPoint<Integer>(2, 3),		true},
-		    {new NumberKDPoint<Integer>(10, 0),		true},
-		    {new NumberKDPoint<Integer>(5, -4),		true},
+		    {new KDPoint(-5.0, -1.0),	true},
+		    {new KDPoint(2.0, 3.0),		true},
+		    {new KDPoint(10.0, 0.0),	true},
+		    {new KDPoint(5.0, -4.0),	true},
 		    
-		    {new NumberKDPoint<Integer>(7, 1),		true},
-		    {new NumberKDPoint<Integer>(-1, -2),	true},
+		    {new KDPoint(7.0, 1.0),		true},
+		    {new KDPoint(-1.0, -2.0),	true},
 		    
-		    {new NumberKDPoint<Integer>(-7, 6),		false},
-		    {new NumberKDPoint<Integer>(2, 7),		false},
-		    {new NumberKDPoint<Integer>(15, 6),		false},
-		    {new NumberKDPoint<Integer>(15, -1),	false},
-		    {new NumberKDPoint<Integer>(16, -8),	false},
-		    {new NumberKDPoint<Integer>(3, -5),		false},
-		    {new NumberKDPoint<Integer>(-6, -9),	false},
-		    {new NumberKDPoint<Integer>(-10, 0),	false}
+		    {new KDPoint(-7.0, 6.0),	false},
+		    {new KDPoint(2.0, 7.0),		false},
+		    {new KDPoint(15.0, 6.0),	false},
+		    {new KDPoint(15.0, -1.0),	false},
+		    {new KDPoint(16.0, -8.0),	false},
+		    {new KDPoint(3.0, -5.0),	false},
+		    {new KDPoint(-6.0, -9.0),	false},
+		    {new KDPoint(-10.0, 0.0),	false}
 	    });
 	}
 	
